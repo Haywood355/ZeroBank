@@ -1,4 +1,5 @@
-name: Fortify FoD DAST Automated Scan on:
+name: Fortify FoD DAST Automated Scan
+on:
     workflow_dispatch:
     push:
       branches: [ "main" ]
