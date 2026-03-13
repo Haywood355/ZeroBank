@@ -5,12 +5,10 @@ on:
       branches: [ "main" ]
     pull_request:
       branches: [ "main" ]
- 
-  permissions:
+permissions:
     contents: read
     security-events: write   # Required to publish to GitHub Security tab
- 
-  jobs:
+jobs:
     fod-dast-scan:
       runs-on: ubuntu-latest
  
