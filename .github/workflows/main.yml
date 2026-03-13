@@ -73,5 +73,4 @@ jobs:
         - name: Logout from Fortify on Demand
 
           if: always()
-          run: fcli fod session logout
-          
+          run: fcli fod session logout         
