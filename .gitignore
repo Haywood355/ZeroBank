@@ -74,5 +74,6 @@ name: Fortify FoD DAST Automated Scan
  
         # Always clean up the session
         - name: Logout from Fortify on Demand
+
           if: always()
           run: fcli fod session logout
