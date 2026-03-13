@@ -50,8 +50,10 @@ jobs:
             --client-id "$FOD_CLIENT_ID" \
             --client-secret "$FOD_CLIENT_SECRET"
 
-      # Validate FOD_RELEASE is set
-      - name: Validate FOD_RELEASE
+      # Resolve the numeric release ID from the release name.
+      # fcli setup-website requires either a numeric ID or "App:Release" format.
+      # We look up the release by name and store its numeric releaseId.
+      - name: Resolve Release ID
         run: |
           if [[ -z "$FOD_RELEASE" ]]; then
             echo "ERROR: FOD_RELEASE is not set."
@@ -63,50 +65,59 @@ jobs:
             fcli fod release list -o table 2>/dev/null || true
             exit 1
           fi
-          echo "FOD_RELEASE: $FOD_RELEASE"
 
-      # Diagnose: print all available assessment types using the FoD REST lookup
-      # This helps identify the correct assessment type name for your tenant.
-      - name: List Available Assessment Types (Diagnostic)
-        run: |
-          echo "=== All available assessment types in this FoD tenant ==="
-          fcli fod rest lookup DastAutomatedAssessmentTypes -o table 2>/dev/null || \
-          fcli fod rest lookup AssessmentTypes -o table 2>/dev/null || \
-          echo "Could not retrieve assessment types via lookup; will use release lsat output below."
+          echo "Looking up release: $FOD_RELEASE"
+          echo ""
+          echo "=== All releases ==="
+          fcli fod release list -o table 2>/dev/null || true
+
+          # Extract app name and release name from "App:Release" format
+          APP_NAME="${FOD_RELEASE%%:*}"
+          REL_NAME="${FOD_RELEASE##*:}"
 
           echo ""
-          echo "=== Assessment types for release: $FOD_RELEASE ==="
-          fcli fod release list-assessment-types \
-            --rel "$FOD_RELEASE" \
-            -o table 2>/dev/null || echo "No assessment types returned for this release."
+          echo "App: $APP_NAME  |  Release: $REL_NAME"
 
-          echo ""
-          echo "=== All scan types for release: $FOD_RELEASE ==="
-          fcli fod release list-assessment-types \
-            --rel "$FOD_RELEASE" \
-            --scan-types Static,Dynamic,Mobile,OpenSource,Container \
-            -o table 2>/dev/null || echo "No scan types returned."
+          # Get the numeric release ID by filtering on releaseName
+          RELEASE_ID=$(fcli fod release list \
+            -o expr="{releaseId}" \
+            -q "releaseName=='${REL_NAME}' && applicationName=='${APP_NAME}'" \
+            2>/dev/null | head -1 | tr -d '[:space:]' || true)
 
-      # Configure the DAST Automated Website scan settings.
-      # --assessment-type accepts either the Name or the Id of the assessment type.
-      # "DAST Automated" is the standard name in most FoD tenants.
-      # If this step fails, check the "List Available Assessment Types" step above
-      # to find the exact name for your tenant and set it as vars.FOD_ASSESSMENT_TYPE.
+          if [[ -z "$RELEASE_ID" ]]; then
+            # Fallback: try matching by releaseName only
+            RELEASE_ID=$(fcli fod release list \
+              -o expr="{releaseId}" \
+              -q "releaseName=='${REL_NAME}'" \
+              2>/dev/null | head -1 | tr -d '[:space:]' || true)
+          fi
+
+          if [[ -z "$RELEASE_ID" ]]; then
+            echo "ERROR: Could not find a release matching '$FOD_RELEASE'."
+            echo "Check the releases table above for the correct App:Release name."
+            exit 1
+          fi
+
+          echo "Resolved Release ID: $RELEASE_ID"
+          echo "FOD_RELEASE_ID=${RELEASE_ID}" >> $GITHUB_ENV
+
+      # Configure the DAST Automated Website scan using the numeric release ID.
+      # Assessment type "Dynamic Website Assessment" confirmed available in this tenant.
       - name: Configure DAST Automated Scan Settings
         run: |
-          # Use vars.FOD_ASSESSMENT_TYPE if set, otherwise try the standard name
+          # Use vars.FOD_ASSESSMENT_TYPE if explicitly set, otherwise use the confirmed name
           ASSESSMENT_TYPE="${{ vars.FOD_ASSESSMENT_TYPE }}"
           if [[ -z "$ASSESSMENT_TYPE" ]]; then
             ASSESSMENT_TYPE="DAST Automated"
           fi
 
           echo "Setting up DAST Website scan:"
-          echo "  Release:         $FOD_RELEASE"
+          echo "  Release ID:      $FOD_RELEASE_ID"
           echo "  Assessment Type: $ASSESSMENT_TYPE"
           echo "  Target URL:      http://zero.webappsecurity.com/"
 
           fcli fod dast-scan setup-website \
-            --rel "$FOD_RELEASE" \
+            --rel "$FOD_RELEASE_ID" \
             --url "http://zero.webappsecurity.com/" \
             --assessment-type "$ASSESSMENT_TYPE" \
             --frequency Subscription \
@@ -116,14 +127,14 @@ jobs:
       - name: Start FoD DAST Automated Scan
         run: |
           fcli fod dast-scan start \
-            --rel "$FOD_RELEASE" \
+            --rel "$FOD_RELEASE_ID" \
             --store curScan
 
       # Poll until scan completes
       - name: Wait for DAST Scan Completion
         run: |
           fcli fod dast-scan wait-for \
-            --rel "$FOD_RELEASE"
+            --rel "$FOD_RELEASE_ID"
 
       # Export SARIF results to GitHub Security tab
       - name: Export Results to GitHub Security
