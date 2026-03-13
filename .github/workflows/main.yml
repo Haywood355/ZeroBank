@@ -27,26 +27,18 @@ jobs:
         with:
           fcli: latest
 
-      # Sanitize FOD_URL: use the correct FoD API endpoint.
-      # If vars.FOD_URL is empty or not set, fall back to the US data center API URL.
-      # Ensure the URL always starts with https:// and points to the API host.
+      # Sanitize FOD_URL: fall back to US data center if variable is empty,
+      # and ensure the URL always starts with https://.
       - name: Sanitize FOD_URL
         run: |
           RAW_URL="${FOD_URL}"
-
-          # Fall back to US data center if variable is empty
           if [[ -z "$RAW_URL" ]]; then
             RAW_URL="https://api.ams.fortify.com"
           fi
-
-          # Strip trailing slashes
           RAW_URL="${RAW_URL%/}"
-
-          # Add https:// if no protocol is present
           if [[ "$RAW_URL" != https://* && "$RAW_URL" != http://* ]]; then
             RAW_URL="https://${RAW_URL}"
           fi
-
           echo "Resolved FOD_URL: ${RAW_URL}"
           echo "FOD_URL=${RAW_URL}" >> $GITHUB_ENV
 
@@ -58,14 +50,21 @@ jobs:
             --client-id "$FOD_CLIENT_ID" \
             --client-secret "$FOD_CLIENT_SECRET"
 
-      # Configure the DAST Automated scan target URL on the release.
-      # Skip this step if already configured in the FoD portal.
+      # Configure the DAST Automated Website scan settings for the release.
+      # In fcli v3.x, 'dast-scan setup' was replaced by 'dast-scan setup-website'.
+      # --assessment-type and --frequency are required; adjust values to match
+      # what is configured in your FoD tenant (use 'fcli fod release lsat' to list valid types).
       - name: Configure DAST Automated Scan Settings
         run: |
-          fcli fod dast-scan setup \
+          fcli fod dast-scan setup-website \
             --rel "$FOD_RELEASE" \
-            --scan-type Automated \
-            --url "http://zero.webappsecurity.com/"
+            --url "http://zero.webappsecurity.com/" \
+            --assessment-type "$FOD_ASSESSMENT_TYPE" \
+            --frequency "$FOD_ENTITLEMENT_FREQUENCY" \
+            --skip-if-exists
+        env:
+          FOD_ASSESSMENT_TYPE: ${{ vars.FOD_ASSESSMENT_TYPE }}
+          FOD_ENTITLEMENT_FREQUENCY: ${{ vars.FOD_ENTITLEMENT_FREQUENCY }}
 
       # Start the DAST Automated scan
       - name: Start FoD DAST Automated Scan
