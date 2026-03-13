@@ -60,11 +60,10 @@ jobs:
             --rel "$FOD_RELEASE" \
             --url "http://zero.webappsecurity.com/" \
             --assessment-type "$FOD_ASSESSMENT_TYPE" \
-            --frequency "$FOD_ENTITLEMENT_FREQUENCY" \
+            --frequency Subscription \
             --skip-if-exists
         env:
           FOD_ASSESSMENT_TYPE: ${{ vars.FOD_ASSESSMENT_TYPE }}
-          FOD_ENTITLEMENT_FREQUENCY: ${{ vars.FOD_ENTITLEMENT_FREQUENCY }}
 
       # Start the DAST Automated scan
       - name: Start FoD DAST Automated Scan
