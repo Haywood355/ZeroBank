@@ -77,3 +77,4 @@ name: Fortify FoD DAST Automated Scan
 
           if: always()
           run: fcli fod session logout
+          
