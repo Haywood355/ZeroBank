@@ -1,38 +1,78 @@
-target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
-
-### IntelliJ IDEA ###
-.idea/
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
-*.iws
-*.iml
-*.ipr
-
-### Eclipse ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### VS Code ###
-.vscode/
-
-### Mac OS ###
-.DS_Store
+name: Fortify FoD DAST Automated Scan
+ 
+  on:
+    workflow_dispatch:
+    push:
+      branches: [ "main" ]
+    pull_request:
+      branches: [ "main" ]
+ 
+  permissions:
+    contents: read
+    security-events: write   # Required to publish to GitHub Security tab
+ 
+  jobs:
+    fod-dast-scan:
+      runs-on: ubuntu-latest
+ 
+      steps:
+        # Install fcli via the official Fortify setup action
+        - name: Setup Fortify tools
+          uses: fortify/github-action/setup@v1
+          with:
+            fcli: latest
+ 
+        # Authenticate to Fortify on Demand
+        - name: Login to Fortify on Demand
+          run: |
+            fcli fod session login \
+              --url "$FOD_URL" \
+              --client-id "$FOD_CLIENT_ID" \
+              --client-secret "$FOD_CLIENT_SECRET"
+          env:
+            FOD_URL: ${{ vars.FOD_URL }}
+            FOD_CLIENT_ID: ${{ secrets.FOD_CLIENT_ID }}
+            FOD_CLIENT_SECRET: ${{ secrets.FOD_CLIENT_SECRET }}
+ 
+        # Configure the DAST Automated scan target URL on the release.
+        # Skip this step if already configured in the FoD portal.
+        - name: Configure DAST Automated Scan Settings
+          run: |
+            fcli fod dast-scan setup \
+              --rel "$FOD_RELEASE" \
+              --scan-type Automated \
+              --url "http://zero.webappsecurity.com/"
+          env:
+            FOD_RELEASE: ${{ vars.FOD_RELEASE }}
+ 
+        # Start the DAST Automated scan
+        - name: Start FoD DAST Automated Scan
+          run: |
+            fcli fod dast-scan start \
+              --rel "$FOD_RELEASE" \
+              --store curScan
+          env:
+            FOD_RELEASE: ${{ vars.FOD_RELEASE }}
+ 
+        # Poll until scan completes
+        - name: Wait for DAST Scan Completion
+          run: |
+            fcli fod dast-scan wait-for \
+              --rel "$FOD_RELEASE"
+          env:
+            FOD_RELEASE: ${{ vars.FOD_RELEASE }}
+ 
+        # Export SARIF results to GitHub Security tab
+        - name: Export Results to GitHub Security
+          uses: fortify/github-action/fod-export@v1
+          env:
+            FOD_URL: ${{ vars.FOD_URL }}
+            FOD_CLIENT_ID: ${{ secrets.FOD_CLIENT_ID }}
+            FOD_CLIENT_SECRET: ${{ secrets.FOD_CLIENT_SECRET }}
+            FOD_RELEASE: ${{ vars.FOD_RELEASE }}
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+ 
+        # Always clean up the session
+        - name: Logout from Fortify on Demand
+          if: always()
+          run: fcli fod session logout
