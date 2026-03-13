@@ -50,62 +50,62 @@ jobs:
             --client-id "$FOD_CLIENT_ID" \
             --client-secret "$FOD_CLIENT_SECRET"
 
-      # Resolve the numeric release ID from the release name.
-      # fcli setup-website requires either a numeric ID or "App:Release" format.
-      # We look up the release by name and store its numeric releaseId.
+      # Resolve the release ID.
+      # FOD_RELEASE can be set as either:
+      #   - A numeric ID directly (e.g. "1722152")  ← uses it as-is
+      #   - An App:Release name (e.g. "ZeroBank:main")  ← looks up the numeric ID
       - name: Resolve Release ID
         run: |
           if [[ -z "$FOD_RELEASE" ]]; then
             echo "ERROR: FOD_RELEASE is not set."
             echo "Go to: GitHub repo → Settings → Variables → Actions → New repository variable"
             echo "  Name:  FOD_RELEASE"
-            echo "  Value: <AppName>:<ReleaseName>  e.g.  ZeroBank:main"
+            echo "  Value: either the numeric release ID (e.g. 1722152)"
+            echo "         or App:Release name (e.g. ZeroBank:main)"
             echo ""
             echo "Available releases in your FoD tenant:"
             fcli fod release list -o table 2>/dev/null || true
             exit 1
           fi
 
-          echo "Looking up release: $FOD_RELEASE"
-          echo ""
-          echo "=== All releases ==="
-          fcli fod release list -o table 2>/dev/null || true
+          # If FOD_RELEASE is already a pure number, use it directly
+          if [[ "$FOD_RELEASE" =~ ^[0-9]+$ ]]; then
+            echo "FOD_RELEASE is a numeric ID: $FOD_RELEASE — using directly."
+            echo "FOD_RELEASE_ID=${FOD_RELEASE}" >> $GITHUB_ENV
+          else
+            # Parse App:Release format and look up the numeric ID
+            APP_NAME="${FOD_RELEASE%%:*}"
+            REL_NAME="${FOD_RELEASE##*:}"
+            echo "Looking up release '$REL_NAME' in application '$APP_NAME'..."
 
-          # Extract app name and release name from "App:Release" format
-          APP_NAME="${FOD_RELEASE%%:*}"
-          REL_NAME="${FOD_RELEASE##*:}"
-
-          echo ""
-          echo "App: $APP_NAME  |  Release: $REL_NAME"
-
-          # Get the numeric release ID by filtering on releaseName
-          RELEASE_ID=$(fcli fod release list \
-            -o expr="{releaseId}" \
-            -q "releaseName=='${REL_NAME}' && applicationName=='${APP_NAME}'" \
-            2>/dev/null | head -1 | tr -d '[:space:]' || true)
-
-          if [[ -z "$RELEASE_ID" ]]; then
-            # Fallback: try matching by releaseName only
             RELEASE_ID=$(fcli fod release list \
               -o expr="{releaseId}" \
-              -q "releaseName=='${REL_NAME}'" \
+              -q "releaseName=='${REL_NAME}' && applicationName=='${APP_NAME}'" \
               2>/dev/null | head -1 | tr -d '[:space:]' || true)
-          fi
 
-          if [[ -z "$RELEASE_ID" ]]; then
-            echo "ERROR: Could not find a release matching '$FOD_RELEASE'."
-            echo "Check the releases table above for the correct App:Release name."
-            exit 1
-          fi
+            # Fallback: match by release name only
+            if [[ -z "$RELEASE_ID" ]]; then
+              RELEASE_ID=$(fcli fod release list \
+                -o expr="{releaseId}" \
+                -q "releaseName=='${REL_NAME}'" \
+                2>/dev/null | head -1 | tr -d '[:space:]' || true)
+            fi
 
-          echo "Resolved Release ID: $RELEASE_ID"
-          echo "FOD_RELEASE_ID=${RELEASE_ID}" >> $GITHUB_ENV
+            if [[ -z "$RELEASE_ID" ]]; then
+              echo "ERROR: Could not find a release matching '$FOD_RELEASE'."
+              echo ""
+              echo "Available releases:"
+              fcli fod release list -o table 2>/dev/null || true
+              exit 1
+            fi
+
+            echo "Resolved Release ID: $RELEASE_ID"
+            echo "FOD_RELEASE_ID=${RELEASE_ID}" >> $GITHUB_ENV
+          fi
 
       # Configure the DAST Automated Website scan using the numeric release ID.
-      # Assessment type "Dynamic Website Assessment" confirmed available in this tenant.
       - name: Configure DAST Automated Scan Settings
         run: |
-          # Use vars.FOD_ASSESSMENT_TYPE if explicitly set, otherwise use the confirmed name
           ASSESSMENT_TYPE="${{ vars.FOD_ASSESSMENT_TYPE }}"
           if [[ -z "$ASSESSMENT_TYPE" ]]; then
             ASSESSMENT_TYPE="DAST Automated"
