@@ -108,7 +108,7 @@ jobs:
         run: |
           ASSESSMENT_TYPE="${{ vars.FOD_ASSESSMENT_TYPE }}"
           if [[ -z "$ASSESSMENT_TYPE" ]]; then
-            ASSESSMENT_TYPE="DAST Automated"
+            ASSESSMENT_TYPE="Dynamic Website Assessment"
           fi
 
           echo "Setting up DAST Website scan:"
