@@ -50,44 +50,49 @@ jobs:
             --client-id "$FOD_CLIENT_ID" \
             --client-secret "$FOD_CLIENT_SECRET"
 
-      # Validate required variables and auto-discover release + assessment type
-      - name: Validate and Resolve Required Variables
+      # Validate FOD_RELEASE and resolve the Dynamic assessment type name
+      - name: Validate and Resolve Assessment Type
         run: |
           echo "=== Checking required variables ==="
 
-          # --- Validate FOD_RELEASE ---
           if [[ -z "$FOD_RELEASE" ]]; then
-            echo ""
             echo "ERROR: FOD_RELEASE is not set."
-            echo "Please add it under: GitHub repo → Settings → Variables → Actions → New repository variable"
-            echo "Format: <AppName>:<ReleaseName>  e.g.  ZeroBank:main"
+            echo "Go to: GitHub repo → Settings → Variables → Actions → New repository variable"
+            echo "  Name:  FOD_RELEASE"
+            echo "  Value: <AppName>:<ReleaseName>  e.g.  ZeroBank:main"
             echo ""
-            echo "Available releases in your FoD tenant:"
+            echo "Available releases:"
             fcli fod release list -o table 2>/dev/null || true
             exit 1
           fi
           echo "FOD_RELEASE: $FOD_RELEASE"
 
-          # --- Resolve FOD_ASSESSMENT_TYPE ---
           echo ""
-          echo "=== Available assessment types for release: $FOD_RELEASE ==="
-          fcli fod release lsat --rel "$FOD_RELEASE" -o table 2>/dev/null || true
+          echo "=== Available Dynamic assessment types for release: $FOD_RELEASE ==="
+          # Use the correct command: list-assessment-types with --scan-types Dynamic
+          fcli fod release list-assessment-types \
+            --rel "$FOD_RELEASE" \
+            --scan-types Dynamic \
+            -o json 2>/dev/null || true
 
-          # Try to find a DAST-related assessment type automatically
-          ASSESSMENT_TYPE=$(fcli fod release lsat --rel "$FOD_RELEASE" \
-            -o expr="{assessmentTypeName}" 2>/dev/null \
-            | grep -iE "(DAST|Dynamic)" | head -1 || true)
+          # Extract the assessment type name from JSON output
+          ASSESSMENT_TYPE=$(fcli fod release list-assessment-types \
+            --rel "$FOD_RELEASE" \
+            --scan-types Dynamic \
+            -o expr="{assessmentTypeName}" 2>/dev/null | head -1 | tr -d '[:space:]' || true)
 
-          # Fall back to the first available type
           if [[ -z "$ASSESSMENT_TYPE" ]]; then
-            ASSESSMENT_TYPE=$(fcli fod release lsat --rel "$FOD_RELEASE" \
-              -o expr="{assessmentTypeName}" 2>/dev/null | head -1 || true)
+            echo ""
+            echo "WARNING: No Dynamic assessment types found. Trying all scan types..."
+            ASSESSMENT_TYPE=$(fcli fod release list-assessment-types \
+              --rel "$FOD_RELEASE" \
+              -o expr="{assessmentTypeName}" 2>/dev/null | head -1 | tr -d '[:space:]' || true)
           fi
 
           if [[ -z "$ASSESSMENT_TYPE" ]]; then
             echo ""
             echo "ERROR: Could not determine a valid assessment type for release '$FOD_RELEASE'."
-            echo "Check the table printed above and set vars.FOD_ASSESSMENT_TYPE in your repository variables."
+            echo "Ensure the release has DAST entitlements assigned in the FoD portal."
             exit 1
           fi
 
