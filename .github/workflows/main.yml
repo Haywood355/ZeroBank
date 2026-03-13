@@ -27,13 +27,27 @@ jobs:
         with:
           fcli: latest
 
-      # Sanitize FOD_URL to ensure it always has the https:// protocol prefix
+      # Sanitize FOD_URL: use the correct FoD API endpoint.
+      # If vars.FOD_URL is empty or not set, fall back to the US data center API URL.
+      # Ensure the URL always starts with https:// and points to the API host.
       - name: Sanitize FOD_URL
         run: |
           RAW_URL="${FOD_URL}"
+
+          # Fall back to US data center if variable is empty
+          if [[ -z "$RAW_URL" ]]; then
+            RAW_URL="https://api.ams.fortify.com"
+          fi
+
+          # Strip trailing slashes
+          RAW_URL="${RAW_URL%/}"
+
+          # Add https:// if no protocol is present
           if [[ "$RAW_URL" != https://* && "$RAW_URL" != http://* ]]; then
             RAW_URL="https://${RAW_URL}"
           fi
+
+          echo "Resolved FOD_URL: ${RAW_URL}"
           echo "FOD_URL=${RAW_URL}" >> $GITHUB_ENV
 
       # Authenticate to Fortify on Demand
@@ -75,4 +89,4 @@ jobs:
       # Always clean up the session
       - name: Logout from Fortify on Demand
         if: always()
-        run: fcli fod session logout      
+        run: fcli fod session logout
