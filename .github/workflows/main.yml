@@ -29,9 +29,7 @@ jobs:
       - name: Sanitize FOD_URL
         run: |
           RAW_URL="${FOD_URL}"
-          if [[ -z "$RAW_URL" ]]; then
-            RAW_URL="https://api.ams.fortify.com"
-          fi
+          if [[ -z "$RAW_URL" ]]; then RAW_URL="https://api.ams.fortify.com"; fi
           RAW_URL="${RAW_URL%/}"
           if [[ "$RAW_URL" != https://* && "$RAW_URL" != http://* ]]; then
             RAW_URL="https://${RAW_URL}"
@@ -50,32 +48,25 @@ jobs:
         run: |
           if [[ -z "$FOD_RELEASE" ]]; then
             echo "ERROR: FOD_RELEASE is not set."
-            echo "Set it under: GitHub repo -> Settings -> Variables -> Actions"
-            echo "  Name:  FOD_RELEASE"
-            echo "  Value: numeric release ID (e.g. 1722152) or App:Release (e.g. ZeroBank:main)"
             fcli fod release list -o table 2>/dev/null || true
             exit 1
           fi
-
           if [[ "$FOD_RELEASE" =~ ^[0-9]+$ ]]; then
             echo "FOD_RELEASE is a numeric ID: $FOD_RELEASE - using directly."
             echo "FOD_RELEASE_ID=${FOD_RELEASE}" >> $GITHUB_ENV
           else
             APP_NAME="${FOD_RELEASE%%:*}"
             REL_NAME="${FOD_RELEASE##*:}"
-            echo "Looking up release '$REL_NAME' in application '$APP_NAME'..."
-            RELEASE_ID=$(fcli fod release list \
-              -o expr="{releaseId}" \
+            RELEASE_ID=$(fcli fod release list -o expr="{releaseId}" \
               -q "releaseName=='${REL_NAME}' && applicationName=='${APP_NAME}'" \
               2>/dev/null | head -1 | tr -d '[:space:]' || true)
             if [[ -z "$RELEASE_ID" ]]; then
-              RELEASE_ID=$(fcli fod release list \
-                -o expr="{releaseId}" \
+              RELEASE_ID=$(fcli fod release list -o expr="{releaseId}" \
                 -q "releaseName=='${REL_NAME}'" \
                 2>/dev/null | head -1 | tr -d '[:space:]' || true)
             fi
             if [[ -z "$RELEASE_ID" ]]; then
-              echo "ERROR: Could not find a release matching '$FOD_RELEASE'."
+              echo "ERROR: Could not find release '$FOD_RELEASE'."
               fcli fod release list -o table 2>/dev/null || true
               exit 1
             fi
@@ -83,74 +74,45 @@ jobs:
             echo "FOD_RELEASE_ID=${RELEASE_ID}" >> $GITHUB_ENV
           fi
 
+      - name: Write helper Python scripts
+        run: |
+          echo "aW1wb3J0IHN5cywganNvbiwgb3MKZGF0YSA9IGpzb24ubG9hZHMoc3lzLnN0ZGluLnJlYWQoKSkKaXRlbXMgPSBkYXRhLmdldCgnaXRlbXMnLCBbXSkKdGFyZ2V0ID0gb3MuZW52aXJvbi5nZXQoJ0FTU0VTU01FTlRfVFlQRScsICcnKS5zdHJpcCgpLmxvd2VyKCkKcHJpbnQoIkF2YWlsYWJsZSB0eXBlczoiLCBmaWxlPXN5cy5zdGRlcnIpCmZvciBpdGVtIGluIGl0ZW1zOgogICAgcHJpbnQoZiIgIGlkPXtpdGVtLmdldCgnaWQnKX0gbmFtZT17aXRlbS5nZXQoJ25hbWUnKX0iLCBmaWxlPXN5cy5zdGRlcnIpCmZvciBpdGVtIGluIGl0ZW1zOgogICAgaWYgaXRlbS5nZXQoJ25hbWUnLCAnJykuc3RyaXAoKS5sb3dlcigpID09IHRhcmdldDoKICAgICAgICBwcmludChpdGVtLmdldCgnaWQnLCAnJykpOyBzeXMuZXhpdCgwKQpmb3IgaXRlbSBpbiBpdGVtczoKICAgIGlmIHRhcmdldCBpbiBpdGVtLmdldCgnbmFtZScsICcnKS5zdHJpcCgpLmxvd2VyKCk6CiAgICAgICAgcHJpbnQoaXRlbS5nZXQoJ2lkJywgJycpKTsgc3lzLmV4aXQoMCkKZm9yIGl0ZW0gaW4gaXRlbXM6CiAgICBpZiBpdGVtLmdldCgnbmFtZScsICcnKS5zdHJpcCgpLmxvd2VyKCkgaW4gdGFyZ2V0OgogICAgICAgIHByaW50KGl0ZW0uZ2V0KCdpZCcsICcnKSk7IHN5cy5leGl0KDApCmZvciBpdGVtIGluIGl0ZW1zOgogICAgaWYgJ3dlYnNpdGUnIGluIGl0ZW0uZ2V0KCduYW1lJywgJycpLmxvd2VyKCk6CiAgICAgICAgcHJpbnQoaXRlbS5nZXQoJ2lkJywgJycpKTsgc3lzLmV4aXQoMCkKaWYgaXRlbXM6CiAgICBwcmludChpdGVtc1swXS5nZXQoJ2lkJywgJycpKTsgc3lzLmV4aXQoMCkKcHJpbnQoJycpCg==" | base64 -d > /tmp/get_at_id.py
+          echo "aW1wb3J0IGpzb24sIG9zCmF0X2lkID0gb3MuZW52aXJvbi5nZXQoJ0FUX0lEJywgJzAnKQpwYXlsb2FkID0gewogICAgJ3NpdGVVcmwnOiAnaHR0cDovL3plcm8ud2ViYXBwc2VjdXJpdHkuY29tLycsCiAgICAnYXNzZXNzbWVudFR5cGVJZCc6IGludChhdF9pZCkgaWYgYXRfaWQuaXNkaWdpdCgpIGVsc2UgMCwKICAgICdlbnRpdGxlbWVudEZyZXF1ZW5jeVR5cGUnOiAnU3Vic2NyaXB0aW9uJywKICAgICdzY2FuVHlwZSc6ICdXZWJzaXRlJwp9CnByaW50KGpzb24uZHVtcHMocGF5bG9hZCkpCg==" | base64 -d > /tmp/build_payload.py
+          echo "Helper scripts written."
+
       - name: Configure DAST Scan Settings via REST API
         env:
           FOD_ASSESSMENT_TYPE: ${{ vars.FOD_ASSESSMENT_TYPE }}
         run: |
           ASSESSMENT_TYPE="${FOD_ASSESSMENT_TYPE}"
           if [[ -z "$ASSESSMENT_TYPE" ]]; then
-            ASSESSMENT_TYPE="Dynamic Website Assessment"
+            ASSESSMENT_TYPE="Dynamic+ Website Assessment"
           fi
-          echo "Assessment type: $ASSESSMENT_TYPE"
+          echo "Target assessment type: $ASSESSMENT_TYPE"
 
-          # Get Bearer token via curl
           TOKEN=$(curl -s -X POST "${FOD_URL}/oauth/token" \
             -H "Content-Type: application/x-www-form-urlencoded" \
             -d "grant_type=client_credentials&client_id=${FOD_CLIENT_ID}&client_secret=${FOD_CLIENT_SECRET}&scope=api-tenant" \
             | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('access_token',''))")
-
-          if [[ -z "$TOKEN" ]]; then
-            echo "ERROR: Could not obtain Bearer token."
-            exit 1
-          fi
+          if [[ -z "$TOKEN" ]]; then echo "ERROR: Could not obtain Bearer token."; exit 1; fi
           echo "Bearer token obtained."
 
-          # Fetch assessment types and extract the matching ID
           AT_RESPONSE=$(curl -s -X GET \
             "${FOD_URL}/api/v3/releases/${FOD_RELEASE_ID}/assessment-types?scanType=Dynamic" \
             -H "Authorization: Bearer ${TOKEN}" \
             -H "Accept: application/json")
           echo "Assessment types response: $AT_RESPONSE"
 
-          # Write Python script to file to avoid YAML quoting issues
-          cat > /tmp/get_at_id.py << 'PYEOF'
-          import sys, json, os
-          data = json.loads(sys.stdin.read())
-          items = data.get('items', [])
-          target = os.environ.get('ASSESSMENT_TYPE', '').lower()
-          for item in items:
-              if item.get('name', '').lower() == target:
-                  print(item.get('id', ''))
-                  sys.exit(0)
-          print('')
-          PYEOF
-
-          AT_ID=$(echo "$AT_RESPONSE" | python3 /tmp/get_at_id.py)
-
+          AT_ID=$(ASSESSMENT_TYPE="$ASSESSMENT_TYPE" echo "$AT_RESPONSE" | python3 /tmp/get_at_id.py)
           if [[ -z "$AT_ID" ]]; then
-            echo "WARNING: Could not find assessment type ID for '$ASSESSMENT_TYPE'."
-            echo "Available types: $AT_RESPONSE"
+            echo "ERROR: No assessment types found for release $FOD_RELEASE_ID."
             exit 1
           fi
-          echo "Assessment Type ID: $AT_ID"
-
-          # Write Python script to build JSON payload
-          cat > /tmp/build_payload.py << 'PYEOF'
-          import json, os
-          at_id = os.environ.get('AT_ID', '0')
-          payload = {
-              'siteUrl': 'http://zero.webappsecurity.com/',
-              'assessmentTypeId': int(at_id) if at_id.isdigit() else 0,
-              'entitlementFrequencyType': 'Subscription',
-              'scanType': 'Website'
-          }
-          print(json.dumps(payload))
-          PYEOF
+          echo "Resolved Assessment Type ID: $AT_ID"
 
           PAYLOAD=$(AT_ID="$AT_ID" python3 /tmp/build_payload.py)
           echo "Payload: $PAYLOAD"
 
-          # Send the scan setup request
           RESPONSE=$(curl -s -w "\n%{http_code}" -X PUT \
             "${FOD_URL}/api/v3/releases/${FOD_RELEASE_ID}/dast-scans/scan-setup" \
             -H "Authorization: Bearer ${TOKEN}" \
