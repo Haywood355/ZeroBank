@@ -76,8 +76,8 @@ jobs:
 
       - name: Write helper Python scripts
         run: |
-          echo "aW1wb3J0IHN5cywganNvbiwgb3MKZGF0YSA9IGpzb24ubG9hZHMoc3lzLnN0ZGluLnJlYWQoKSkKaXRlbXMgPSBkYXRhLmdldCgnaXRlbXMnLCBbXSkKdGFyZ2V0ID0gb3MuZW52aXJvbi5nZXQoJ0FTU0VTU01FTlRfVFlQRScsICcnKS5zdHJpcCgpLmxvd2VyKCkKcHJpbnQoIkF2YWlsYWJsZSB0eXBlczoiLCBmaWxlPXN5cy5zdGRlcnIpCmZvciBpdGVtIGluIGl0ZW1zOgogICAgcHJpbnQoZiIgIGlkPXtpdGVtLmdldCgnaWQnKX0gbmFtZT17aXRlbS5nZXQoJ25hbWUnKX0iLCBmaWxlPXN5cy5zdGRlcnIpCmZvciBpdGVtIGluIGl0ZW1zOgogICAgaWYgaXRlbS5nZXQoJ25hbWUnLCAnJykuc3RyaXAoKS5sb3dlcigpID09IHRhcmdldDoKICAgICAgICBwcmludChpdGVtLmdldCgnaWQnLCAnJykpOyBzeXMuZXhpdCgwKQpmb3IgaXRlbSBpbiBpdGVtczoKICAgIGlmIHRhcmdldCBpbiBpdGVtLmdldCgnbmFtZScsICcnKS5zdHJpcCgpLmxvd2VyKCk6CiAgICAgICAgcHJpbnQoaXRlbS5nZXQoJ2lkJywgJycpKTsgc3lzLmV4aXQoMCkKZm9yIGl0ZW0gaW4gaXRlbXM6CiAgICBpZiBpdGVtLmdldCgnbmFtZScsICcnKS5zdHJpcCgpLmxvd2VyKCkgaW4gdGFyZ2V0OgogICAgICAgIHByaW50KGl0ZW0uZ2V0KCdpZCcsICcnKSk7IHN5cy5leGl0KDApCmZvciBpdGVtIGluIGl0ZW1zOgogICAgaWYgJ3dlYnNpdGUnIGluIGl0ZW0uZ2V0KCduYW1lJywgJycpLmxvd2VyKCk6CiAgICAgICAgcHJpbnQoaXRlbS5nZXQoJ2lkJywgJycpKTsgc3lzLmV4aXQoMCkKaWYgaXRlbXM6CiAgICBwcmludChpdGVtc1swXS5nZXQoJ2lkJywgJycpKTsgc3lzLmV4aXQoMCkKcHJpbnQoJycpCg==" | base64 -d > /tmp/get_at_id.py
-          echo "aW1wb3J0IGpzb24sIG9zCmF0X2lkID0gb3MuZW52aXJvbi5nZXQoJ0FUX0lEJywgJzAnKQpwYXlsb2FkID0gewogICAgJ3NpdGVVcmwnOiAnaHR0cDovL3plcm8ud2ViYXBwc2VjdXJpdHkuY29tLycsCiAgICAnYXNzZXNzbWVudFR5cGVJZCc6IGludChhdF9pZCkgaWYgYXRfaWQuaXNkaWdpdCgpIGVsc2UgMCwKICAgICdlbnRpdGxlbWVudEZyZXF1ZW5jeVR5cGUnOiAnU3Vic2NyaXB0aW9uJywKICAgICdzY2FuVHlwZSc6ICdXZWJzaXRlJwp9CnByaW50KGpzb24uZHVtcHMocGF5bG9hZCkpCg==" | base64 -d > /tmp/build_payload.py
+          echo "aW1wb3J0IHN5cywganNvbiwgb3MKZGF0YSA9IGpzb24ubG9hZHMoc3lzLnN0ZGluLnJlYWQoKSkKaXRlbXMgPSBkYXRhLmdldCgnaXRlbXMnLCBbXSkKdGFyZ2V0ID0gb3MuZW52aXJvbi5nZXQoJ0FTU0VTU01FTlRfVFlQRScsICcnKS5zdHJpcCgpLmxvd2VyKCkKcHJpbnQoIkF2YWlsYWJsZSB0eXBlczoiLCBmaWxlPXN5cy5zdGRlcnIpCmZvciBpdGVtIGluIGl0ZW1zOgogICAgcHJpbnQoZiIgIGFzc2Vzc21lbnRUeXBlSWQ9e2l0ZW0uZ2V0KCdhc3Nlc3NtZW50VHlwZUlkJyl9IGVudGl0bGVtZW50SWQ9e2l0ZW0uZ2V0KCdlbnRpdGxlbWVudElkJyl9IG5hbWU9e2l0ZW0uZ2V0KCduYW1lJyl9IGZyZXE9e2l0ZW0uZ2V0KCdmcmVxdWVuY3lUeXBlJyl9IiwgZmlsZT1zeXMuc3RkZXJyKQojIEZpbmQgdGhlIG1hdGNoaW5nIGl0ZW0gYW5kIHJldHVybiBhc3Nlc3NtZW50VHlwZUlkOmVudGl0bGVtZW50SWQ6ZnJlcXVlbmN5VHlwZQpkZWYgZmluZF9pdGVtKGl0ZW1zLCB0YXJnZXQpOgogICAgIyAxLiBFeGFjdCBtYXRjaAogICAgZm9yIGl0ZW0gaW4gaXRlbXM6CiAgICAgICAgaWYgaXRlbS5nZXQoJ25hbWUnLCAnJykuc3RyaXAoKS5sb3dlcigpID09IHRhcmdldDoKICAgICAgICAgICAgcmV0dXJuIGl0ZW0KICAgICMgMi4gVGFyZ2V0IGluIGl0ZW0gbmFtZQogICAgZm9yIGl0ZW0gaW4gaXRlbXM6CiAgICAgICAgaWYgdGFyZ2V0IGluIGl0ZW0uZ2V0KCduYW1lJywgJycpLnN0cmlwKCkubG93ZXIoKToKICAgICAgICAgICAgcmV0dXJuIGl0ZW0KICAgICMgMy4gSXRlbSBuYW1lIGluIHRhcmdldAogICAgZm9yIGl0ZW0gaW4gaXRlbXM6CiAgICAgICAgaWYgaXRlbS5nZXQoJ25hbWUnLCAnJykuc3RyaXAoKS5sb3dlcigpIGluIHRhcmdldDoKICAgICAgICAgICAgcmV0dXJuIGl0ZW0KICAgICMgNC4gQW55IHdlYnNpdGUgaXRlbQogICAgZm9yIGl0ZW0gaW4gaXRlbXM6CiAgICAgICAgaWYgJ3dlYnNpdGUnIGluIGl0ZW0uZ2V0KCduYW1lJywgJycpLmxvd2VyKCk6CiAgICAgICAgICAgIHJldHVybiBpdGVtCiAgICAjIDUuIEZpcnN0IGl0ZW0KICAgIGlmIGl0ZW1zOgogICAgICAgIHJldHVybiBpdGVtc1swXQogICAgcmV0dXJuIE5vbmUKCiMgUHJlZmVyIFN1YnNjcmlwdGlvbiBmcmVxdWVuY3kKc3ViX2l0ZW1zID0gW2kgZm9yIGkgaW4gaXRlbXMgaWYgaS5nZXQoJ2ZyZXF1ZW5jeVR5cGUnLCcnKS5sb3dlcigpID09ICdzdWJzY3JpcHRpb24nXQppdGVtID0gZmluZF9pdGVtKHN1Yl9pdGVtcywgdGFyZ2V0KSBvciBmaW5kX2l0ZW0oaXRlbXMsIHRhcmdldCkKaWYgaXRlbToKICAgIGF0X2lkID0gaXRlbS5nZXQoJ2Fzc2Vzc21lbnRUeXBlSWQnLCAnJykKICAgIGVudF9pZCA9IGl0ZW0uZ2V0KCdlbnRpdGxlbWVudElkJywgJycpCiAgICBmcmVxID0gaXRlbS5nZXQoJ2ZyZXF1ZW5jeVR5cGUnLCAnU3Vic2NyaXB0aW9uJykKICAgIHByaW50KGYie2F0X2lkfTp7ZW50X2lkfTp7ZnJlcX0iKQplbHNlOgogICAgcHJpbnQoJycpCg==" | base64 -d > /tmp/get_at_id.py
+          echo "aW1wb3J0IGpzb24sIG9zCnBhcnRzID0gb3MuZW52aXJvbi5nZXQoJ0FUX0lORk8nLCAnMDowOlN1YnNjcmlwdGlvbicpLnNwbGl0KCc6JykKYXRfaWQgPSBwYXJ0c1swXSBpZiBsZW4ocGFydHMpID4gMCBlbHNlICcwJwplbnRfaWQgPSBwYXJ0c1sxXSBpZiBsZW4ocGFydHMpID4gMSBlbHNlICcwJwpmcmVxID0gcGFydHNbMl0gaWYgbGVuKHBhcnRzKSA+IDIgZWxzZSAnU3Vic2NyaXB0aW9uJwpwYXlsb2FkID0gewogICAgJ3NpdGVVcmwnOiAnaHR0cDovL3plcm8ud2ViYXBwc2VjdXJpdHkuY29tLycsCiAgICAnYXNzZXNzbWVudFR5cGVJZCc6IGludChhdF9pZCkgaWYgYXRfaWQuaXNkaWdpdCgpIGVsc2UgMCwKICAgICdlbnRpdGxlbWVudElkJzogaW50KGVudF9pZCkgaWYgZW50X2lkLmlzZGlnaXQoKSBlbHNlIDAsCiAgICAnZW50aXRsZW1lbnRGcmVxdWVuY3lUeXBlJzogZnJlcSwKICAgICdzY2FuVHlwZSc6ICdXZWJzaXRlJwp9CnByaW50KGpzb24uZHVtcHMocGF5bG9hZCkpCg==" | base64 -d > /tmp/build_payload.py
           echo "Helper scripts written."
 
       - name: Configure DAST Scan Settings via REST API
@@ -95,7 +95,7 @@ jobs:
             -d "grant_type=client_credentials&client_id=${FOD_CLIENT_ID}&client_secret=${FOD_CLIENT_SECRET}&scope=api-tenant" \
             | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('access_token',''))")
           if [[ -z "$TOKEN" ]]; then echo "ERROR: Could not obtain Bearer token."; exit 1; fi
-          echo "Bearer token obtained."
+          echo "*** obtained."
 
           AT_RESPONSE=$(curl -s -X GET \
             "${FOD_URL}/api/v3/releases/${FOD_RELEASE_ID}/assessment-types?scanType=Dynamic" \
@@ -105,14 +105,15 @@ jobs:
 
           echo "$AT_RESPONSE" > /tmp/at_response.json
           export ASSESSMENT_TYPE
-          AT_ID=$(python3 /tmp/get_at_id.py < /tmp/at_response.json)
-          if [[ -z "$AT_ID" ]]; then
+          AT_INFO=$(python3 /tmp/get_at_id.py < /tmp/at_response.json)
+
+          if [[ -z "$AT_INFO" ]]; then
             echo "ERROR: No assessment types found for release $FOD_RELEASE_ID."
             exit 1
           fi
-          echo "Resolved Assessment Type ID: $AT_ID"
+          echo "Resolved AT_INFO: $AT_INFO"
 
-          PAYLOAD=$(AT_ID="$AT_ID" python3 /tmp/build_payload.py)
+          PAYLOAD=$(AT_INFO="$AT_INFO" python3 /tmp/build_payload.py)
           echo "Payload: $PAYLOAD"
 
           RESPONSE=$(curl -s -w "\n%{http_code}" -X PUT \
