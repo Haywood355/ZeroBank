@@ -117,7 +117,7 @@ jobs:
           echo "Payload: $PAYLOAD"
 
           RESPONSE=$(curl -s -w "\n%{http_code}" -X PUT \
-            "${FOD_URL}/api/v3/releases/${FOD_RELEASE_ID}/dast-scans/scan-setup" \
+            "${FOD_URL}/api/v3/releases/${FOD_RELEASE_ID}/dynamic-scans/scan-setup" \
             -H "Authorization: Bearer ${TOKEN}" \
             -H "Content-Type: application/json" \
             -d "$PAYLOAD")
