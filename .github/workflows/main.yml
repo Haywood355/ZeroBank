@@ -103,7 +103,9 @@ jobs:
             -H "Accept: application/json")
           echo "Assessment types response: $AT_RESPONSE"
 
-          AT_ID=$(ASSESSMENT_TYPE="$ASSESSMENT_TYPE" echo "$AT_RESPONSE" | python3 /tmp/get_at_id.py)
+          echo "$AT_RESPONSE" > /tmp/at_response.json
+          export ASSESSMENT_TYPE
+          AT_ID=$(python3 /tmp/get_at_id.py < /tmp/at_response.json)
           if [[ -z "$AT_ID" ]]; then
             echo "ERROR: No assessment types found for release $FOD_RELEASE_ID."
             exit 1
