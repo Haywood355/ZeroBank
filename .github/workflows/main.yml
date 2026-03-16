@@ -184,7 +184,9 @@ jobs:
           RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
             "${FOD_URL}/api/v3/releases/${FOD_RELEASE_ID}/dast-automated-scans/start-scan" \
             -H "Authorization: Bearer ${TOKEN}" \
-            -H "Content-Type: application/json")
+            -H "Content-Type: application/json" \
+            -H "Content-Length: 0" \
+            -d "")
           HTTP_CODE=$(echo "$RESPONSE" | tail -1)
           BODY=$(echo "$RESPONSE" | head -n -1)
           echo "HTTP Status: $HTTP_CODE"
