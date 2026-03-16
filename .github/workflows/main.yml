@@ -79,6 +79,9 @@ jobs:
           echo "aW1wb3J0IGpzb24sIHN5cywgb3MKZGF0YSA9IGpzb24ubG9hZChvcGVuKCcvdG1wL2F0X3JlbGVhc2UuanNvbicpKQppdGVtcyA9IGRhdGEuZ2V0KCdpdGVtcycsIFtdKQp0YXJnZXQgPSBvcy5lbnZpcm9uLmdldCgnQVNTRVNTTUVOVF9UWVBFJywgJycpLnN0cmlwKCkubG93ZXIoKQpwcmludChmIkF2YWlsYWJsZSB0eXBlczoiLCBmaWxlPXN5cy5zdGRlcnIpCmZvciBpdGVtIGluIGl0ZW1zOgogICAgcHJpbnQoZiIgIGFzc2Vzc21lbnRUeXBlSWQ9e2l0ZW0uZ2V0KCdhc3Nlc3NtZW50VHlwZUlkJyl9IGVudGl0bGVtZW50SWQ9e2l0ZW0uZ2V0KCdlbnRpdGxlbWVudElkJyl9IG5hbWU9e2l0ZW0uZ2V0KCduYW1lJyl9IGZyZXE9e2l0ZW0uZ2V0KCdmcmVxdWVuY3lUeXBlJyl9IiwgZmlsZT1zeXMuc3RkZXJyKQojIFByZWZlciBTdWJzY3JpcHRpb24gZnJlcXVlbmN5CmZvciBpdGVtIGluIGl0ZW1zOgogICAgbmFtZSA9IGl0ZW0uZ2V0KCduYW1lJywgJycpLnN0cmlwKCkubG93ZXIoKQogICAgaWYgKG5hbWUgPT0gdGFyZ2V0IG9yIHRhcmdldCBpbiBuYW1lIG9yIG5hbWUgaW4gdGFyZ2V0KSBhbmQgaXRlbS5nZXQoJ2ZyZXF1ZW5jeVR5cGUnLCAnJykubG93ZXIoKSA9PSAnc3Vic2NyaXB0aW9uJzoKICAgICAgICBwcmludChmIntpdGVtLmdldCgnYXNzZXNzbWVudFR5cGVJZCcpfTp7aXRlbS5nZXQoJ2VudGl0bGVtZW50SWQnKX06e2l0ZW0uZ2V0KCdmcmVxdWVuY3lUeXBlJyl9IikKICAgICAgICBzeXMuZXhpdCgwKQojIEZhbGxiYWNrOiBhbnkgbWF0Y2hpbmcgbmFtZQpmb3IgaXRlbSBpbiBpdGVtczoKICAgIG5hbWUgPSBpdGVtLmdldCgnbmFtZScsICcnKS5zdHJpcCgpLmxvd2VyKCkKICAgIGlmIG5hbWUgPT0gdGFyZ2V0IG9yIHRhcmdldCBpbiBuYW1lIG9yIG5hbWUgaW4gdGFyZ2V0OgogICAgICAgIHByaW50KGYie2l0ZW0uZ2V0KCdhc3Nlc3NtZW50VHlwZUlkJyl9OntpdGVtLmdldCgnZW50aXRsZW1lbnRJZCcpfTp7aXRlbS5nZXQoJ2ZyZXF1ZW5jeVR5cGUnLCAnU3Vic2NyaXB0aW9uJyl9IikKICAgICAgICBzeXMuZXhpdCgwKQojIExhc3QgcmVzb3J0OiBmaXJzdCBpdGVtCmlmIGl0ZW1zOgogICAgaXRlbSA9IGl0ZW1zWzBdCiAgICBwcmludChmIntpdGVtLmdldCgnYXNzZXNzbWVudFR5cGVJZCcpfTp7aXRlbS5nZXQoJ2VudGl0bGVtZW50SWQnKX06e2l0ZW0uZ2V0KCdmcmVxdWVuY3lUeXBlJywgJ1N1YnNjcmlwdGlvbicpfSIpCg==" | base64 -d > /tmp/get_at_id.py
           echo "aW1wb3J0IGpzb24sIG9zCmF0X2luZm8gPSBvcy5lbnZpcm9uLmdldCgnQVRfSU5GTycsICcnKQpwYXJ0cyA9IGF0X2luZm8uc3BsaXQoJzonKQphc3Nlc3NtZW50X3R5cGVfaWQgPSBpbnQocGFydHNbMF0pIGlmIGxlbihwYXJ0cykgPiAwIGFuZCBwYXJ0c1swXS5pc2RpZ2l0KCkgZWxzZSAwCmVudGl0bGVtZW50X2lkID0gaW50KHBhcnRzWzFdKSBpZiBsZW4ocGFydHMpID4gMSBhbmQgcGFydHNbMV0uaXNkaWdpdCgpIGVsc2UgMApmcmVxdWVuY3lfdHlwZSA9IHBhcnRzWzJdIGlmIGxlbihwYXJ0cykgPiAyIGVsc2UgJ1N1YnNjcmlwdGlvbicKdGltZV96b25lID0gb3MuZW52aXJvbi5nZXQoJ1RJTUVfWk9ORScsICdNb3VudGFpbiBTdGFuZGFyZCBUaW1lJykKc2l0ZV91cmwgPSBvcy5lbnZpcm9uLmdldCgnU0lURV9VUkwnLCAnaHR0cDovL3plcm8ud2ViYXBwc2VjdXJpdHkuY29tLycpCgpwYXlsb2FkID0gewogICAgImR5bmFtaWNTaXRlVXJsIjogc2l0ZV91cmwsCiAgICAiYXNzZXNzbWVudFR5cGVJZCI6IGFzc2Vzc21lbnRfdHlwZV9pZCwKICAgICJlbnRpdGxlbWVudElkIjogZW50aXRsZW1lbnRfaWQsCiAgICAiZW50aXRsZW1lbnRGcmVxdWVuY3lUeXBlIjogZnJlcXVlbmN5X3R5cGUsCiAgICAiZHluYW1pY1NjYW5FbnZpcm9ubWVudEZhY2luZ1R5cGUiOiAiRXh0ZXJuYWwiLAogICAgInRpbWVab25lIjogdGltZV96b25lLAogICAgInBvbGljeSI6ICJTdGFuZGFyZCIsCiAgICAicmVzdHJpY3RUb0RpcmVjdG9yeUFuZFN1YmRpcmVjdG9yaWVzIjogRmFsc2UsCiAgICAicmVxdWlyZXNTaXRlQXV0aGVudGljYXRpb24iOiBGYWxzZSwKICAgICJlbmFibGVSZWR1bmRhbnRQYWdlRGV0ZWN0aW9uIjogRmFsc2UsCiAgICAicmVxdWVzdEZhbHNlUG9zaXRpdmVSZW1vdmFsIjogRmFsc2UKfQpwcmludChqc29uLmR1bXBzKHBheWxvYWQpKQo=" | base64 -d > /tmp/build_payload.py
           echo "aW1wb3J0IHN5cywganNvbgpkYXRhID0ganNvbi5sb2FkKHN5cy5zdGRpbikKaXRlbXMgPSBkYXRhLmdldCgnaXRlbXMnLCBkYXRhKSBpZiBpc2luc3RhbmNlKGRhdGEsIGRpY3QpIGVsc2UgZGF0YQppZiBub3QgaXNpbnN0YW5jZShpdGVtcywgbGlzdCk6CiAgICBpdGVtcyA9IFtdCmZvciBpdGVtIGluIGl0ZW1zOgogICAgbmFtZSA9IHN0cihpdGVtLmdldCgndGV4dCcsIGl0ZW0uZ2V0KCd2YWx1ZScsIGl0ZW0uZ2V0KCduYW1lJywgJycpKSkpCiAgICBpZiAnTW91bnRhaW4nIGluIG5hbWUgYW5kICdVUycgaW4gbmFtZToKICAgICAgICBwcmludChpdGVtLmdldCgndmFsdWUnLCBpdGVtLmdldCgndGV4dCcsIG5hbWUpKSkKICAgICAgICBicmVhawplbHNlOgogICAgcHJpbnQoJ01vdW50YWluIFN0YW5kYXJkIFRpbWUnKQo=" | base64 -d > /tmp/tz_lookup.py
+          echo "aW1wb3J0IHN5cywganNvbgpkYXRhID0ganNvbi5sb2FkKHN5cy5zdGRpbikKaXRlbXMgPSBkYXRhLmdldCgnaXRlbXMnLCBbXSkKZm9yIGl0ZW0gaW4gaXRlbXM6CiAgICBzdGF0dXMgPSBzdHIoaXRlbS5nZXQoJ3NjYW5TdGF0dXNUeXBlJywgJycpKS5sb3dlcigpCiAgICBpZiBzdGF0dXMgaW4gWydpbl9wcm9ncmVzcycsICdpbnByb2dyZXNzJywgJ3J1bm5pbmcnLCAncXVldWVkJywgJ3BlbmRpbmcnXToKICAgICAgICBwcmludChpdGVtLmdldCgnc2NhbklkJywgJycpKQogICAgICAgIGJyZWFrCg==" | base64 -d > /tmp/find_inprogress.py
+          echo "aW1wb3J0IHN5cywganNvbgpkYXRhID0ganNvbi5sb2FkKHN5cy5zdGRpbikKaXRlbXMgPSBkYXRhLmdldCgnaXRlbXMnLCBbXSkKaWYgaXRlbXM6IHByaW50KGl0ZW1zWzBdLmdldCgnc2NhblN0YXR1c1R5cGUnLCAnVW5rbm93bicpKQplbHNlOiBwcmludCgnVW5rbm93bicpCg==" | base64 -d > /tmp/get_status.py
+          echo "aW1wb3J0IHN5cywganNvbgpkID0ganNvbi5sb2FkKHN5cy5zdGRpbikKcHJpbnQoZC5nZXQoJ3NjYW5JZCcsIGQuZ2V0KCdpZCcsICcnKSkpCg==" | base64 -d > /tmp/get_scan_id.py
           echo "Helper scripts written."
 
       - name: Configure DAST Automated Scan Settings
@@ -150,14 +153,81 @@ jobs:
 
       - name: Start FoD DAST Automated Scan
         run: |
-          fcli fod dast-scan start \
-            --rel "$FOD_RELEASE_ID" \
-            --store curScan
+          # Obtain a fresh Bearer token
+          TOKEN=$(curl -s -X POST "${FOD_URL}/oauth/token" \
+            -H "Content-Type: application/x-www-form-urlencoded" \
+            -d "grant_type=client_credentials&client_id=${FOD_CLIENT_ID}&client_secret=${FOD_CLIENT_SECRET}&scope=api-tenant" \
+            | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('access_token',''))")
+          if [[ -z "$TOKEN" ]]; then echo "ERROR: Could not obtain Bearer token."; exit 1; fi
+
+          # Check for any in-progress scan and cancel it
+          echo "Checking for in-progress scans..."
+          SCANS=$(curl -s -X GET \
+            "${FOD_URL}/api/v3/releases/${FOD_RELEASE_ID}/scans?limit=5" \
+            -H "Authorization: Bearer ${TOKEN}" \
+            -H "Accept: application/json")
+          echo "Recent scans: $SCANS"
+          IN_PROGRESS_ID=$(echo "$SCANS" | python3 /tmp/find_inprogress.py 2>/dev/null || echo "")
+
+          if [[ -n "$IN_PROGRESS_ID" && "$IN_PROGRESS_ID" =~ ^[0-9]+$ ]]; then
+            echo "Cancelling in-progress scan ID: $IN_PROGRESS_ID"
+            curl -s -X POST \
+              "${FOD_URL}/api/v3/releases/${FOD_RELEASE_ID}/scans/${IN_PROGRESS_ID}/cancel-scan" \
+              -H "Authorization: Bearer ${TOKEN}" \
+              -H "Content-Type: application/json" || true
+            echo "Waiting 30s for cancellation to complete..."
+            sleep 30
+          fi
+
+          # Start the DAST Automated scan via REST API
+          echo "Starting DAST Automated scan for release $FOD_RELEASE_ID..."
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+            "${FOD_URL}/api/v3/releases/${FOD_RELEASE_ID}/dast-automated-scans/start-scan" \
+            -H "Authorization: Bearer ${TOKEN}" \
+            -H "Content-Type: application/json")
+          HTTP_CODE=$(echo "$RESPONSE" | tail -1)
+          BODY=$(echo "$RESPONSE" | head -n -1)
+          echo "HTTP Status: $HTTP_CODE"
+          echo "Response: $BODY"
+
+          if [[ "$HTTP_CODE" != "200" && "$HTTP_CODE" != "201" && "$HTTP_CODE" != "202" ]]; then
+            echo "ERROR: Failed to start DAST Automated scan with HTTP $HTTP_CODE"
+            exit 1
+          fi
+
+          SCAN_ID=$(echo "$BODY" | python3 /tmp/get_scan_id.py 2>/dev/null || echo "")
+          echo "Scan started. Scan ID: $SCAN_ID"
+          echo "DAST_SCAN_ID=${SCAN_ID}" >> $GITHUB_ENV
 
       - name: Wait for DAST Scan Completion
         run: |
-          fcli fod dast-scan wait-for \
-            --rel "$FOD_RELEASE_ID"
+          echo "Waiting for DAST Automated scan to complete (release $FOD_RELEASE_ID)..."
+          # Obtain a fresh Bearer token
+          TOKEN=$(curl -s -X POST "${FOD_URL}/oauth/token" \
+            -H "Content-Type: application/x-www-form-urlencoded" \
+            -d "grant_type=client_credentials&client_id=${FOD_CLIENT_ID}&client_secret=${FOD_CLIENT_SECRET}&scope=api-tenant" \
+            | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('access_token',''))")
+
+          MAX_WAIT=7200  # 2 hours max
+          INTERVAL=60
+          ELAPSED=0
+          while [[ $ELAPSED -lt $MAX_WAIT ]]; do
+            STATUS_RESP=$(curl -s -X GET \
+              "${FOD_URL}/api/v3/releases/${FOD_RELEASE_ID}/scans?limit=1" \
+              -H "Authorization: Bearer ${TOKEN}" \
+              -H "Accept: application/json")
+            STATUS=$(echo "$STATUS_RESP" | python3 /tmp/get_status.py 2>/dev/null || echo "Unknown")
+            echo "Elapsed: ${ELAPSED}s | Scan status: $STATUS"
+            if [[ "${STATUS,,}" == "completed" || "${STATUS,,}" == "cancelled" || "${STATUS,,}" == "failed" ]]; then
+              echo "Scan finished with status: $STATUS"
+              break
+            fi
+            sleep $INTERVAL
+            ELAPSED=$((ELAPSED + INTERVAL))
+          done
+          if [[ $ELAPSED -ge $MAX_WAIT ]]; then
+            echo "WARNING: Scan did not complete within $MAX_WAIT seconds. Proceeding anyway."
+          fi
 
       - name: Export Results to GitHub Security
         uses: fortify/github-action/fod-export@v1
